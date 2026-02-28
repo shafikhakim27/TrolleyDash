@@ -69,12 +69,13 @@ export class RaceScene extends Phaser.Scene {
   }
 
   _drawTrack() {
-    const g     = this.add.graphics();
-    const wp    = this.trackData.waypoints;
-    const w     = this.trackData.trackWidthPx;
+    const wp = this.trackData.waypoints;
+    const w = this.trackData.trackWidthPx;
 
-    // Background
+    // Background first so track lines remain visible above it.
     this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x2d5a27);
+
+    const g = this.add.graphics();
 
     // Track surface
     g.lineStyle(w, 0x555566, 1);
