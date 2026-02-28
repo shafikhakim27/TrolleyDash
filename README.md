@@ -32,7 +32,7 @@ Track waypoints are derived from **OpenStreetMap** data via the Overpass API (se
 | Key | Action |
 |-----|--------|
 | ↑ | Accelerate |
-| ↓ | Brake / reverse |
+| ↓ | Brake |
 | ← | Steer left |
 | → | Steer right |
 
@@ -79,11 +79,3 @@ TrolleyDash/
 - **[Vite](https://vitejs.dev/)** – build tool / dev server
 - **[OpenStreetMap / Overpass API](https://overpass-api.de/)** – map data source
 
-## Next Steps (for Codex)
-
-- Replace rectangle trolley graphics with proper sprite sheets
-- Add camera follow / zoom for the player trolley
-- Implement off-track grass slowing and collision detection
-- Add sound effects and music
-- Persist high scores to localStorage
-- Mobile touch controls
