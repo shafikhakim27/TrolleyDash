@@ -1,0 +1,30 @@
+{
+  "name": "trolleydash",
+  "version": "1.0.0",
+  "description": "Trolley Dash – an 8-racer top-down racing game set across Singapore parks and roads.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "scrape": "node scripts/scrapeTrackData.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shafikhakim27/TrolleyDash.git"
+  },
+  "keywords": ["game", "racing", "singapore", "phaser"],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shafikhakim27/TrolleyDash/issues"
+  },
+  "homepage": "https://github.com/shafikhakim27/TrolleyDash#readme",
+  "devDependencies": {
+    "node-fetch": "^3.3.2",
+    "vite": "^7.3.1"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  }
+}
