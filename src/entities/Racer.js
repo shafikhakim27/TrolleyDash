@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { TROLLEY, AI, RACER_COLOURS, RACER_NAMES, NUM_RACERS } from '../config.js';
+import { TROLLEY, AI, RACER_COLOURS, RACER_NAMES } from '../config.js';
 
 /**
  * Racer – a single trolley on the track.

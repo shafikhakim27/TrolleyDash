@@ -38,30 +38,3 @@ export function loadTrack(track) {
     trackWidthPx:   track.trackWidthPx * scale,
   };
 }
-
-/**
- * Return the total arc-length of the waypoint polyline.
- * @param {number[][]} waypoints
- */
-export function trackLength(waypoints) {
-  let len = 0;
-  for (let i = 1; i < waypoints.length; i++) {
-    const dx = waypoints[i][0] - waypoints[i - 1][0];
-    const dy = waypoints[i][1] - waypoints[i - 1][1];
-    len += Math.sqrt(dx * dx + dy * dy);
-  }
-  return len;
-}
-
-/**
- * Given the current waypoint index and progress (0–1) to the next,
- * return the interpolated world position.
- */
-export function waypointPosition(waypoints, index, t) {
-  const a = waypoints[index];
-  const b = waypoints[(index + 1) % waypoints.length];
-  return {
-    x: a[0] + (b[0] - a[0]) * t,
-    y: a[1] + (b[1] - a[1]) * t,
-  };
-}
