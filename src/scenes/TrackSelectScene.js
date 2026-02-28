@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_WIDTH, GAME_HEIGHT, NUM_LAPS } from '../config.js';
+import { GAME_WIDTH, GAME_HEIGHT } from '../config.js';
 import { ALL_TRACKS } from '../tracks/trackLoader.js';
 
 /**
