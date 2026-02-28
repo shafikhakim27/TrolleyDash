@@ -28,12 +28,20 @@ export function loadTrack(track) {
     angle,
   });
 
+  const scaledWaypoints = track.waypoints.map(scalePoint);
+  const first = scaledWaypoints[0];
+  const last = scaledWaypoints[scaledWaypoints.length - 1];
+  const hasClosingDuplicate =
+    scaledWaypoints.length > 1 &&
+    first[0] === last[0] &&
+    first[1] === last[1];
+
   return {
     ...track,
     scale,
     offsetX,
     offsetY,
-    waypoints:      track.waypoints.map(scalePoint),
+    waypoints:      hasClosingDuplicate ? scaledWaypoints.slice(0, -1) : scaledWaypoints,
     startPositions: track.startPositions.map(scalePos),
     trackWidthPx:   track.trackWidthPx * scale,
   };
