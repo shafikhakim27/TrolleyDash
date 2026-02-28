@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { TROLLEY, AI, RACER_COLOURS, RACER_NAMES, NUM_RACERS } from '../config.js';
+import { TROLLEY, AI, RACER_COLOURS, RACER_NAMES } from '../config.js';
 
 /**
  * Racer – a single trolley on the track.
@@ -27,7 +27,7 @@ export class Racer extends Phaser.GameObjects.Container {
 
     // Race state
     this.speed           = 0;
-    this.currentWaypoint = 0;          // next waypoint to reach
+    this.currentWaypoint = this._initialWaypointIndex(); // next waypoint to reach
     this.lapCount        = 0;
     this.racePosition    = index + 1;
     this.finished        = false;
@@ -55,6 +55,8 @@ export class Racer extends Phaser.GameObjects.Container {
 
     // Rotation tracks our heading in radians
     this.rotation = Phaser.Math.DegToRad(pos.angle);
+
+    this.waypointCaptureRadius = Math.max(24, scene.trackData.trackWidthPx * 0.65);
   }
 
   /** Draw the trolley graphic. */
@@ -117,10 +119,36 @@ export class Racer extends Phaser.GameObjects.Container {
     }
   }
 
+  /** Pick the next waypoint closest to the current spawn lane. */
+  _initialWaypointIndex() {
+    let bestIdx = 0;
+    let bestDist = Number.POSITIVE_INFINITY;
+
+    this.waypoints.forEach(([wx, wy], idx) => {
+      const d = Phaser.Math.Distance.Between(this.x, this.y, wx, wy);
+      if (d < bestDist) {
+        bestDist = d;
+        bestIdx = idx;
+      }
+    });
+
+    return (bestIdx + 1) % this.waypoints.length;
+  }
+
   /** Simple waypoint-following AI. */
   _updateAI(dt) {
-    const targetIdx = (this.currentWaypoint + AI.lookAheadIndex) % this.waypoints.length;
-    const target    = this.waypoints[targetIdx];
+    const currentTarget = this.waypoints[this.currentWaypoint];
+    const distanceToCurrent = Phaser.Math.Distance.Between(
+      this.x,
+      this.y,
+      currentTarget[0],
+      currentTarget[1],
+    );
+
+    const targetIdx = distanceToCurrent > this.waypointCaptureRadius * 1.5
+      ? this.currentWaypoint
+      : (this.currentWaypoint + AI.lookAheadIndex) % this.waypoints.length;
+    const target = this.waypoints[targetIdx];
 
     const dx    = target[0] - this.x;
     const dy    = target[1] - this.y;
@@ -136,10 +164,14 @@ export class Racer extends Phaser.GameObjects.Container {
 
   /** Advance waypoint when close enough. */
   _checkWaypoint() {
-    const wp   = this.waypoints[this.currentWaypoint];
-    const dist = Phaser.Math.Distance.Between(this.x, this.y, wp[0], wp[1]);
+    // Advance through one-or-more waypoints if we're already in the capture radius.
+    // This makes progression robust on fast sections and tighter bends.
+    let safety = 0;
+    while (safety < this.waypoints.length) {
+      const wp = this.waypoints[this.currentWaypoint];
+      const dist = Phaser.Math.Distance.Between(this.x, this.y, wp[0], wp[1]);
+      if (dist > this.waypointCaptureRadius) break;
 
-    if (dist < 20) {
       const prev = this.currentWaypoint;
       this.currentWaypoint = (this.currentWaypoint + 1) % this.waypoints.length;
 
@@ -147,10 +179,13 @@ export class Racer extends Phaser.GameObjects.Container {
       if (this.currentWaypoint === 0 && prev === this.waypoints.length - 1) {
         this.lapCount++;
         if (this.lapCount >= this.totalLaps) {
-          this.finished   = true;
+          this.finished = true;
           this.finishTime = this.scene.raceTimer;
+          break;
         }
       }
+
+      safety++;
     }
   }
 
