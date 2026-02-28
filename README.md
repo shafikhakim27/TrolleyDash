@@ -32,7 +32,7 @@ Track waypoints are derived from **OpenStreetMap** data via the Overpass API (se
 | Key | Action |
 |-----|--------|
 | ↑ | Accelerate |
-| ↓ | Brake / reverse |
+| ↓ | Brake |
 | ← | Steer left |
 | → | Steer right |
 

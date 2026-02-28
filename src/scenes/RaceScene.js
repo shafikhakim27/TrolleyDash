@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_WIDTH, GAME_HEIGHT, NUM_RACERS, NUM_LAPS, RACER_NAMES } from '../config.js';
+import { GAME_WIDTH, GAME_HEIGHT, NUM_RACERS, NUM_LAPS } from '../config.js';
 import { ALL_TRACKS, loadTrack } from '../tracks/trackLoader.js';
 import { Racer } from '../entities/Racer.js';
 
@@ -54,11 +54,17 @@ export class RaceScene extends Phaser.Scene {
   }
 
   _tick() {
-    this.countDown--;
     if (this.countDown > 0) {
-      this.time.delayedCall(1000, () => this._tick());
-    } else {
-      this.raceStarted = true;
+      this.countDown--;
+
+      if (this.countDown > 0) {
+        this.time.delayedCall(1000, () => this._tick());
+      } else {
+        // Keep countdown at 0 so HUD can show "GO!" for one beat.
+        this.time.delayedCall(1000, () => {
+          this.raceStarted = true;
+        });
+      }
     }
   }
 
